@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import styled from 'styled-components';
+import { useReactToPrint } from 'react-to-print';
 
-import { HeaderComponent, FooterComponent, AvatarComponent, TitleComponent, DescriptionComponent } from './components';
+import { HeaderComponent, FooterComponent, AvatarComponent, TitleComponent, DescriptionComponent, RangeComponent } from './components';
+
+// Icons: 
+import {ReactComponent as PhoneIcon} from './assets/icons/phone.svg';
+import {ReactComponent as EmailIcon} from './assets/icons/mail.svg';
 
 const Wrapper = styled.div`
 max-width:1200px;
@@ -34,17 +39,25 @@ margin-left: 1rem;
 
 const App = () => {
 
-  const handleAvatarClick = () => console.log('avatar clicked');
-  const handlePrintClick = () => console.log('print clicked');
+  
+  const [skillsCounter,setSkillsCounter] = useState(1);
+  const [worksCounter,setWorksCounter] = useState(1);
+
+  const componentRef = useRef();
+
+  const handlePrintClick = useReactToPrint({
+    content: () => componentRef.current,
+  })
+
     return (
         <div className="ui-wrapper">
       <HeaderComponent onClick={handlePrintClick}/>
       <div className="ui-content-wrapper">
         <Wrapper>
-          <div className="ui-container">
+          <div className="ui-container" ref={componentRef}>
             <Row itemsCenter>
             <Sidebar>
-            <AvatarComponent onClick={handleAvatarClick}/>
+            <AvatarComponent/>
             </Sidebar>
             <Content>
             <TitleComponent>Hello World!</TitleComponent>
@@ -56,17 +69,31 @@ const App = () => {
             <Row>
             <Sidebar>  
             <TitleComponent size='3' isUppercase >About me:</TitleComponent>
-            <DescriptionComponent>Software Engineer</DescriptionComponent>
-            <DescriptionComponent isSecondary>Washington, DC | tocode.ru </DescriptionComponent>
-            <DescriptionComponent isPrimary style={{ marginTop: '2rem' }}> nick@gmail.com</DescriptionComponent>
-            <DescriptionComponent isPrimary>+1 588-6500</DescriptionComponent>
+            <DescriptionComponent>Web Developer</DescriptionComponent>
+            <DescriptionComponent isSecondary>Washington, DC | dfdfd.ru </DescriptionComponent>
+            <DescriptionComponent isPrimary style={{ marginTop: '2rem' }}>
+              <EmailIcon style={{marginRight:'0.6rem'}}/>
+              nick@gmail.com
+            </DescriptionComponent>
+            <DescriptionComponent isPrimary>
+              <PhoneIcon style={{marginRight: '0.6rem'}}/>
+              +1 588-6500
+            </DescriptionComponent>
             </Sidebar>
             <Content>
             <TitleComponent size='3' isUppercase >Education:</TitleComponent>
             <DescriptionComponent>Stanford University - BS Electrical Engineering</DescriptionComponent>
-            <TitleComponent size={'3'} isUppercase style={{marginTop:'3.6rem'}}>Work experience:</TitleComponent>
-            <DescriptionComponent>Solutions Architect, Stripe.</DescriptionComponent>
-            <TitleComponent size={'3'} isUppercase style={{marginTop:'3rem'}}>Skills:</TitleComponent>
+            <TitleComponent size={'3'} isUppercase style={{marginTop:'3.6rem'}} isShowButton onClick={()=> setWorksCounter(worksCounter+1)}>Work experience:</TitleComponent>
+            {
+              new Array(worksCounter).fill(1).map((_,idx)=><DescriptionComponent key={idx}>{idx+1}.Solutions Architect, Stripe.</DescriptionComponent>)
+            }
+            
+            <TitleComponent size={'3'} isUppercase style={{marginTop:'3rem'}} isShowButton onClick={() => setSkillsCounter(skillsCounter+1)}>Skills:</TitleComponent>
+            {
+              new Array(skillsCounter).fill(1).map((_,idx)=><RangeComponent key={idx}/>)
+            }
+            
+            
             </Content>
             </Row>
            
