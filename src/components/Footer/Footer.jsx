@@ -2,7 +2,11 @@ import React from 'react'
 
 const FooterComponent = () => {
   return (
-    <footer>footer</footer>
+    <footer className='footer'>
+      <div className="ui-container">
+        <a className='ui-link' href="#" target='_blank'>GitHub</a>
+      </div>
+    </footer>
   )
 }
 
